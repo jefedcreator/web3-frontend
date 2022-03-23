@@ -2,6 +2,8 @@ import './App.css';
 import Header from './components/header/Header';
 import MyStake from './components/MyStake/MyStake';
 import StakeHistory from './components/StakeHistory/StakeHistory';
+import { useState } from 'react';
+
 
 function App() {
   const stakeData = [
