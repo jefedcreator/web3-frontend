@@ -2,8 +2,10 @@ import './App.css';
 import Header from './components/header/Header';
 import MyStake from './components/MyStake/MyStake';
 import StakeHistory from './components/StakeHistory/StakeHistory';
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import Footer from './components/Footer/Footer';
+import { Contract, ethers } from 'ethers';
+import abi from './abi.json';
 
 function App() {
 
@@ -60,20 +62,38 @@ function App() {
     }
   ])
 
+  useEffect(()=>{
+    window.ethereum.on("connect",async (payload) =>{
+      if(Number(payload.chainId) !== 80001) return alert("you are not on the right network, please connect to polygon");
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const account = await provider.listAccounts()
+      const userMaticBal = await provider.getBalance(account[0])
+      console.log(userMaticBal);
+      const signer = provider.getSigner()
+      const contractInstance = new Contract("0x169E82570feAc981780F3C48Ee9f05CED1328e1b", abi, provider)
+      const userBalance = await contractInstance.balanceOf(account[0]);
+      console.log("user balance is:",userBalance); 
+      setUserInfo({
+        matic_balance: userMaticBal,
+        token_balance: userBalance,
+        address: account[0]
+      })
+      setConnected(true)
+    })
+  })
+
   const connectWallet = async () => {
     // logic
+    if (!!window.ethereum || !!window.web3) {
+      await window.ethereum.request({method:"eth_requestAccounts"})
+    } else {
+      alert("please use an ethereum enabled browser")
+    }
 
-    setConnected(true)
-    setUserInfo(
-      {
-        matic_balance: "63549678582439050349",
-        token_balance: "65045396805965968546",
-        address: "0xE428Db9A3B47046acb020B8B5a5B29b8792a1415"
-      }
-    )
-  }
-
-  const onChangeInput = ({target}) => {
+    
+    }
+    
+    const onChangeInput = ({target}) => {
     switch (target.id) {
       case "stake":
         setStakeInput(target.value)
