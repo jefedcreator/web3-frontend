@@ -40,3 +40,8 @@
     background-color: rgb(240, 239, 239);
 }
 
+.scroll{
+    height: 500px;
+    overflow-y: scroll;
+}
+

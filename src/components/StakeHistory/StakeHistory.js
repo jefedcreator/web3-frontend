@@ -2,12 +2,13 @@ import React from 'react'
 import { addressShortner, formatDate } from '../../utils/helpers';
 import Styles from './StakeHistory.module.css';
 import clsx from 'clsx';
-
+import { utils } from 'ethers';
 
 const StakeHistory = ({stakeData}) => {
 
   return (
     <div className={Styles.root}>
+      <div className={Styles.scroll}>
         <table className= {Styles.table}>
           <thead className = {Styles.table_header}>
               <tr className={Styles.table__head_row}>
@@ -25,7 +26,7 @@ const StakeHistory = ({stakeData}) => {
                   {index + 1}
                 </td>
                 <td className= {Styles.table_data}>
-                  {item.amount}
+                  {Number(utils.formatUnits(item.amount, 18)).toFixed(4)}
                 </td>
                 <td className= {Styles.table_data}>
                   {addressShortner(item.account, false)}
@@ -40,6 +41,7 @@ const StakeHistory = ({stakeData}) => {
             })}
           </tbody>
         </table>
+        </div>
     </div>
   )
 }
