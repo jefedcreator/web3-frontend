@@ -11,7 +11,8 @@ const MyStake = ({
   onClickWithdraw,
   rewardAmount,
   stakeAmount,
-  connected
+  connected,
+  onClickView
 }) => {
   return (
     <div className={Styles.root}>
@@ -55,6 +56,19 @@ const MyStake = ({
             className={clsx({[Styles.unstake_btn]: true, [Styles.btn_diabled]: !connected})}
             disabled = {!connected}
             >Unstake</button>
+          </form>
+
+          <form onSubmit = {onClickView} className={Styles.form} >
+            <input 
+              type = "text" 
+              placeholder="Input address" 
+              className={Styles.input}
+              // value = {withdrawInput}
+              onClick = {onClickView}
+              id = "viewStruct"
+            />
+            <button type="submit"
+            >View stake</button>
           </form>
         </div>
     </div>
