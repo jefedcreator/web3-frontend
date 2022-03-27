@@ -12,7 +12,9 @@ const MyStake = ({
   rewardAmount,
   stakeAmount,
   connected,
-  onClickView
+  onClickView,
+  addressInput,
+  seeStakeDetails
 }) => {
   return (
     <div className={Styles.root}>
@@ -63,13 +65,18 @@ const MyStake = ({
               type = "text" 
               placeholder="Input address" 
               className={Styles.input}
-              // value = {withdrawInput}
-              onClick = {onClickView}
+              // value = {addressInput}
+              onChange = {onChangeInput}
               id = "viewStruct"
             />
-            <button type="submit"
+            <button type="submit" className={clsx({[Styles.stake_btn] : true})}
             >View stake</button>
           </form>
+          <div>
+            <p>Amount: {seeStakeDetails.amount}</p>
+            <p>Address: {seeStakeDetails.address}</p>
+            <p>Time: {seeStakeDetails.time}</p>
+          </div>
         </div>
     </div>
   )

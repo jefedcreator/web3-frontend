@@ -38,7 +38,10 @@ function App() {
   const [stateHistory, setStakeHistory] = useState([]);
 
   // all stake history data displayed on the history table
-  const [stakeDetails, setstakeDetails] = useState([]);
+  const [stakeDetails, setstakeDetails] = useState("");
+
+  //display stake details of address
+  const [seeStakeDetails, setSeeStakeDetails] = useState([]);
 
   // helper function for getting the matic and token balance, given an address
   const getAccountDetails = async (address) => {
@@ -184,7 +187,7 @@ function App() {
         break;
     
       case "viewStruct":
-        setstakeDetails([])
+        setstakeDetails(target.value);
         break;
     default:
     }
@@ -236,15 +239,22 @@ function App() {
 
   const onClickView = async (e) => {
     e.preventDefault();
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
+    const customProvider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_RPC_URL)
     const BRTContractInstance = new Contract(
       BRTTokenAddress,
       BRTTokenAbi,
-      signer
+      customProvider
     );
-    const myStake = await BRTContractInstance.myStake();
-    console.log(myStake);
+    const myStake = await BRTContractInstance.getStakeByAddress(
+      stakeDetails
+    );
+ 
+    setSeeStakeDetails({
+        amount: utils.formatUnits(myStake.stakeAmount.toString(), 18),
+        address: myStake.staker,
+        time: formatDate(myStake.time.toString()),
+        valid: myStake.valid,
+      });
   }
 
   const getStake = async () => {
@@ -296,6 +306,7 @@ function App() {
           rewardAmount = {rewardAmount}
           connected = {connected}
           onClickView={onClickView}
+          seeStakeDetails={seeStakeDetails}
         />
         <StakeHistory
           stakeData = {stateHistory}
